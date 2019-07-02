@@ -12,12 +12,14 @@ class User(db.Model):
     lastname = db.Column(db.String(30), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
 
+
 class Tool(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), nullable=False)
     description = db.Column(db.String(300))
-    location = db.Column(Integer)
+    location = db.Column(db.Integer)
     notes = db.Column(db.String(300))
+
 
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
