@@ -2,7 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////catalog.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////catalog/catalog.db'
 db = SQLAlchemy(app)
 
 
@@ -24,7 +24,7 @@ class Tool(db.Model):
         3- on loan
         4- unknown
     '''
-    location = db.Column(db.Integer)
+    location = db.Column(db.Integer, default=1)
     notes = db.Column(db.String(300))
     # All tools must belong to a user.
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
