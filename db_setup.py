@@ -19,7 +19,9 @@ class Tool(db.Model):
     description = db.Column(db.String(300))
     location = db.Column(db.Integer)
     notes = db.Column(db.String(300))
-
+    # All tools must belong to a user.
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False,
+      backref=db.backref('users'))
 
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
