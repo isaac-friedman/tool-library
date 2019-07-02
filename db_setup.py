@@ -21,7 +21,11 @@ class Tool(db.Model):
     notes = db.Column(db.String(300))
     # All tools must belong to a user.
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False,
-      backref=db.backref('users'))
+        backref=db.backref('tools'))
+    # All tools must belong to a category.
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False,
+        backref=db.backref('tools'))
+
 
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
