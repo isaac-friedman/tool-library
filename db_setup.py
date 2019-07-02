@@ -17,3 +17,8 @@ class Tool(db.Model):
     name = db.Column(db.String(20), nullable=False)
     description = db.Column(db.String(300))
     notes = db.Column(db.String(300))
+
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20), nullable=False)
+    description = db.Column(db.String(300))
