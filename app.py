@@ -20,17 +20,17 @@ def list_category(category_id):
     return "This page will list all of a user's tools of the specified category."
 
 
-@app.route('/tools/new')
+@app.route('/tools/new/')
 def new():
     return "Future New Tool Form"
 
 
-@app.route('/tools/<int:tool_id>/edit')
+@app.route('/tools/<int:tool_id>/edit/')
 def edit_tool(tool_id):
     return "Future Edit form for existing tools"
 
 
-@app.route('/tools/<int:tool_id>/delete')
+@app.route('/tools/<int:tool_id>/delete/')
 def delete(tool_id):
     return "Future delete form for existing tools"
 
