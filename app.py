@@ -15,6 +15,15 @@ class User(db.Model):
     lastname = db.Column(db.String(30), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
 
+    @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'firstname': self.firstname,
+            'lastname': self.lastname,
+            'email': self.email,
+        }
+
 
 class Tool(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -43,6 +52,14 @@ class Category(db.Model):
     name = db.Column(db.String(20), nullable=False)
     description = db.Column(db.String(300))
 
+    @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+        }
+
 
 @app.route('/')
 @app.route('/login/')
@@ -62,7 +79,8 @@ def list_category(category_id):
 
 @app.route('/tools/categories/')
 def list_cats():
-    print(Category.query.all())
+    cats = Category.query.all()
+    print(cats)
     return "IT DIDN'T eRROR! reJOIcE"
 
 
