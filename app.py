@@ -46,6 +46,18 @@ class Tool(db.Model):
     nullable=False)
     category = db.relationship('Category', backref=db.backref('tools'))
 
+    @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'location': self.location,
+            'notes': self.notes,
+            'user_id': self.user_id,
+            'category_id': self.category_id,
+        }
+
 
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
