@@ -1,7 +1,5 @@
 from flask import Flask, request, render_template, url_for, redirect, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
-# from db_setup import Category, User, Tool
-# from config import Config
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///catalog.db'
@@ -92,8 +90,7 @@ def list_category(category_id):
 @app.route('/tools/categories/')
 def list_cats():
     cats = Category.query.all()
-    print(cats)
-    return "IT DIDN'T eRROR! reJOIcE"
+    return render_template("categories.html", cats=cats)
 
 
 @app.route('/tools/new/')

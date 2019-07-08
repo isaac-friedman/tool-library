@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Available Tool Categories</title>
+    </head>
+    <body>
+        {% for cat in cats %}
+        <div>
+        <p>{{cat.name}}</p>
+        {% endfor %}
+    </body>
+</html>
