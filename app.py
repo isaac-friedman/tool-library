@@ -1,14 +1,47 @@
 from flask import Flask, request, render_template, url_for, redirect, flash, jsonify
-# from flask_sqlalchemy import SQLAlchemy
-from db_setup import db, Category, User, Tool
+from flask_sqlalchemy import SQLAlchemy
+# from db_setup import Category, User, Tool
 # from config import Config
 
 app = Flask(__name__)
-"""
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///catalog.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-"""
+
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    firstname = db.Column(db.String(20), nullable=False)
+    lastname = db.Column(db.String(30), nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+
+
+class Tool(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20), nullable=False)
+    description = db.Column(db.String(300))
+    '''
+    Possible values:
+        1- home
+        2- work
+        3- on loan
+        4- unknown
+    '''
+    location = db.Column(db.Integer, default=1)
+    notes = db.Column(db.String(300))
+    # All tools must belong to a user.
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user = db.relationship('User', backref=db.backref('tools'))
+    # All tools must belong to a category.
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'),
+    nullable=False)
+    category = db.relationship('Category', backref=db.backref('tools'))
+
+
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20), nullable=False)
+    description = db.Column(db.String(300))
 
 
 @app.route('/')
@@ -29,7 +62,7 @@ def list_category(category_id):
 
 @app.route('/tools/categories/')
 def list_cats():
-    print(Category.query().all())
+    print(Category.query.all())
     return "IT DIDN'T eRROR! reJOIcE"
 
 
