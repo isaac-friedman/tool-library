@@ -34,7 +34,7 @@ class Tool(db.Model):
         3- on loan
         4- unknown
     '''
-    location = db.Column(db.Integer, default=1)
+    location = db.Column(db.Integer, default=4)
     notes = db.Column(db.String(300))
     # All tools must belong to a user.
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
