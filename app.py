@@ -86,7 +86,12 @@ def all():
 def list_category(category_id):
     cat = Category.query.filter_by(id=category_id).first()
     print(cat)
-    return render_template("category.html", cat=cat)
+    tools = Tool.query.filter_by(category_id=category_id).all()
+    print(tools)
+    for tool in tools:
+        print(tool.id)
+        print(tool.description)
+    return render_template("category.html", cat=cat, tools=tools)
 
 
 @app.route('/tools/categories/')

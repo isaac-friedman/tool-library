@@ -5,6 +5,13 @@
         <title>{{cat.name}}</title>
     </head>
     <body>
-        <center><h1>"This page will list all of a user's tools of the specified category."</h1></center>
+        <h2>{{cat.name}}</h2>
+        {% for tool in tools %}
+        <p>
+            {{tool.name}}
+            </br>
+            {{tool.description}}
+        </p>
+        {% endfor %}
     </body>
 </html>
