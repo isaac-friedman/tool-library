@@ -74,17 +74,19 @@ class Category(db.Model):
 @app.route('/')
 @app.route('/login/')
 def login():
-    return "This will be the login page."
+    return render_template("login.html")
 
 
 @app.route('/tools/')
 def all():
-    return "This page will list all of the logged-in user's tools."
+    return render_template("list.html")
 
 
 @app.route('/tools/<int:category_id>/')
 def list_category(category_id):
-    return "This page will list all of a user's tools of the specified category."
+    cat = Category.query.filter_by(id=category_id).first()
+    print(cat)
+    return render_template("category.html", cat=cat)
 
 
 @app.route('/tools/categories/')
@@ -95,17 +97,17 @@ def list_cats():
 
 @app.route('/tools/new/')
 def new():
-    return "Future New Tool Form"
+    return render_template("new.html")
 
 
 @app.route('/tools/<int:tool_id>/edit/')
 def edit_tool(tool_id):
-    return "Future Edit form for existing tools"
+    return render_template('edit.html', id=tool_id)
 
 
 @app.route('/tools/<int:tool_id>/delete/')
 def delete(tool_id):
-    return "Future delete form for existing tools"
+    return render_template('delete.html', id=tool_id)
 
 
 if __name__ == '__main__':
