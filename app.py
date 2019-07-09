@@ -79,7 +79,19 @@ def login():
 
 @app.route('/tools/')
 def all():
-    return render_template("list.html")
+    tools = db.session.query(Tool.id, Tool.name, Tool.description,
+      Category.name).join(Category, Tool.category_id == Category.id).all()
+    by_category = {}
+    for tool in tools:
+        if tool[3] not in by_category:
+            by_category[tool[3]] = [[tool[0], tool[1], tool[2]]]
+
+        else:
+            by_category[tool[3]].append([tool[0], tool[1], tool[2]])
+
+    print(by_category)
+    # return "<center><h1>WE'RE WORKING ON IT DAMMIT</h1></center>"
+    return render_template("list.html", by_category=by_category)
 
 
 @app.route('/tools/<int:category_id>/')
