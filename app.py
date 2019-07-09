@@ -85,7 +85,6 @@ def all():
     for tool in tools:
         if tool[3] not in by_category:
             by_category[tool[3]] = [[tool[0], tool[1], tool[2]]]
-
         else:
             by_category[tool[3]].append([tool[0], tool[1], tool[2]])
 
