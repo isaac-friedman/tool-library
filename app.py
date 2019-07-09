@@ -111,7 +111,7 @@ def edit_tool(tool_id):
 
 
 @app.route('/tools/<int:tool_id>/delete/')
-def delete(tool_id):
+def delete_tool(tool_id):
     return render_template('delete.html', id=tool_id)
 
 
