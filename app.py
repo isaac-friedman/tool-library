@@ -146,9 +146,15 @@ def edit_tool(tool_id):
         return render_template("edit.html", tool=tool)
 
 
-@app.route('/tools/<int:tool_id>/delete/')
+@app.route('/tools/<int:tool_id>/delete/', methods=['GET', 'POST'])
 def delete_tool(tool_id):
-    return render_template('delete.html', id=tool_id)
+    tool = Tool.query.filter_by(id=tool_id).one()
+    if request.method == 'POST':
+        db.session.delete(tool)
+        db.session.commit()
+        return redirect(url_for('all'))
+    else:
+        return render_template('delete.html', name=tool.name, id=tool.id)
 
 
 if __name__ == '__main__':
