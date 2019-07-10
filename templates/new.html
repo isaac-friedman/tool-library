@@ -5,25 +5,27 @@
         <title></title>
     </head>
     <body>
-        <center><h1>"Future New Tool Form"</center></h1>
+        <label for="new_tool">Fields marked * are required.</label>
         <form id="new_tool" method='POST' action='{{url_for('new')}}'>
             <!--TEMPORARY!! DELETE NEXT LINE AFTER LOGIN SYSTEM IS IMPLEMENTED-->
             <input type=hidden name="user_id" value=1 />
-            <label for="name">Name</label>
-            <input type="text" id="name" name="name"/><br/>
-            <label for="description">Description</label>
+            <label for="name">Name: *</label>
+            <input required type="text" id="name" name="name"/><br/>
+            <label for="description">Description: </label>
             <input type="text" id="description" name="description"/><br/>
-            <label for="notes">Notes</label>
+            <label for="notes">Notes: </label>
             <input type="textarea" id="notes" name="notes"/></br>
-            <label for="location">Name</label>
-            <select id="location" form=new_tool name="location">
+            <label for="location">Location: *</label>
+            <select required id="location" form=new_tool name="location">
+                <option value="">--Please choose an option--</option>
                 <option value=1>Home</option>
                 <option value=2>Work</option>
                 <option value=3>On Loan</option>
                 <option value=4>Unknown (default)</option>
             </select> <br />
-            <label for="category">Category</label>
-            <select id="category" form=new_tool name="category">
+            <label for="category">Category: *</label>
+            <select required id="category" form=new_tool name="category">
+                <option value="">--Please choose an option--</option>
                 <option value=1>Hand Tools</option>
                 <option value=2>Carpentry</option>
                 <option value=3>Woodworking</option>
