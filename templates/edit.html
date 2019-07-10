@@ -6,6 +6,35 @@
     </head>
     <body>
         <center><h1>Future Edit form for existing tools</h1></center>
-
+        <label for="edit_tool">Fields marked * are required.</label>
+        <form id="edit_tool" method='POST' action="{{url_for('edit_tool')}}">
+            <!--TEMPORARY!! DELETE NEXT LINE AFTER LOGIN SYSTEM IS IMPLEMENTED-->
+            <input type=hidden name="user_id" value=1 />
+            <label for="name">Name: *</label>
+            <input required type="text" id="name" name="name"/><br/>
+            <label for="description">Description: </label>
+            <input type="text" id="description" name="description"/><br/>
+            <label for="notes">Notes: </label>
+            <input type="textarea" id="notes" name="notes"/></br>
+            <label for="location">Location: *</label>
+            <select required id="location" form=edit_tool name="location">
+                <option value="">--Please choose an option--</option>
+                <option value=1>Home</option>
+                <option value=2>Work</option>
+                <option value=3>On Loan</option>
+                <option value=4>Unknown (default)</option>
+            </select> <br />
+            <label for="category">Category: *</label>
+            <select required id="category" form=edit_tool name="category">
+                <option value="">--Please choose an option--</option>
+                <option value=1>Hand Tools</option>
+                <option value=2>Carpentry</option>
+                <option value=3>Woodworking</option>
+                <option value=4>Painting</option>
+                <option value=4>Welding</option>
+            </select>
+            <input type="submit" value="submit" />
+        </form>
+        <a href = {{url_for('all')}}>Cancel</a>
     </body>
 </html>
