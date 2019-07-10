@@ -128,23 +128,20 @@ def new():
         return render_template("new.html")
 
 
-@app.route('/tools/<int:tool_id>/edit/')
+@app.route('/tools/<int:tool_id>/edit/', methods=['GET', 'POST'])
 def edit_tool(tool_id):
     tool = Tool.query.filter_by(id=tool_id).one()
     if request.method == 'POST':
-        print("Commence update logic")
-        """
-        # Use of user_id from input is strictly temporary
-        newTool = Tool(user_id=int(request.form['user_id']),
-          id=tool_id,
-          name=request.form['name'],
-          description=request.form['description'],
-          location=int(request.form['location']),
-          notes=request.form['notes'],
-          category_id=int(request.form['category']))
-        db.session.add(newTool)
+        if request.form['name']:  # sanity check of form data
+            tool.name = request.form['name']
+            tool.description = request.form['description']
+            tool.notes = request.form['notes']
+            tool.location = request.form['location']
+
+        print(tool.notes)
+        db.session.add(tool)
         db.session.commit()
-        return redirect(url_for('all'))"""
+        return redirect(url_for('all'))
     else:
         return render_template("edit.html", tool=tool)
 
