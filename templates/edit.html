@@ -17,21 +17,21 @@
             <label for="notes">Notes: </label>
             <input type="textarea" id="notes" name="notes" value="{{tool.notes}}"/></br>
             <label for="location">Location: *</label>
-            <select required id="location" form=edit_tool name="location" selected="{{tool.location}}">
+            <select required id="location" form=edit_tool name="location">
                 <option value="">--Please choose an option--</option>
-                <option value=1>Home</option>
-                <option value=2>Work</option>
-                <option value=3>On Loan</option>
-                <option value=4>Unknown (default)</option>
+                <option {% if tool.location==1 %} selected {% endif %} value=1>Home</option>
+                <option {% if tool.location==2 %} selected {% endif %} value=2>Work</option>
+                <option {% if tool.location==3 %} selected {% endif %} value=3>On Loan</option>
+                <option {% if tool.location==4 %} selected {% endif %} value=4>Unknown (default)</option>
             </select> <br />
             <label for="category">Category: *</label>
             <select required id="category" form=edit_tool name="category" selected="{{tool.category_id}}">
                 <option value="">--Please choose an option--</option>
-                <option value=1>Hand Tools</option>
-                <option value=2>Carpentry</option>
-                <option value=3>Woodworking</option>
-                <option value=4>Painting</option>
-                <option value=4>Welding</option>
+                <option {% if tool.location==1 %} selected {% endif %} value=1>Hand Tools</option>
+                <option {% if tool.location==2 %} selected {% endif %} value=2>Carpentry</option>
+                <option {% if tool.location==3 %} selected {% endif %} value=3>Woodworking</option>
+                <option {% if tool.location==4 %} selected {% endif %} value=4>Painting</option>
+                <option {% if tool.location==5 %} selected {% endif %} value=5>Welding</option>
             </select>
             <input type="submit" value="submit" />
         </form>
