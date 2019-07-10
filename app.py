@@ -111,9 +111,21 @@ def list_cats():
     return render_template("categories.html", cats=cats)
 
 
-@app.route('/tools/new/')
+@app.route('/tools/new/', methods=['GET', 'POST'])
 def new():
-    return render_template("new.html")
+    if request.method == 'POST':
+        # Use of user_id from input is strictly temporary
+        newTool = Tool(user_id=int(request.form['user_id']),
+          name=request.form['name'],
+          description=request.form['description'],
+          location=int(request.form['location']),
+          notes=request.form['notes'],
+          category_id=int(request.form['category']))
+        db.session.add(newTool)
+        db.session.commit()
+        return redirect(url_for('all'))
+    else:
+        return render_template("new.html")
 
 
 @app.route('/tools/<int:tool_id>/edit/')
