@@ -5,6 +5,10 @@
         <title></title>
     </head>
     <body>
-        <center><h1>Future delete form for existing tools</center></h1>
+        <form method='POST' action="{{url_for('delete_tool',tool_id=id)}}"
+            <label for="delete_tool">Really delete {{name}}? This action cannot be undone</label>
+            <input type="submit" value="DELETE!"/>
+        </form>
+        <a href="{{url_for('all')}}">Cancel</a>
     </body>
 </html>
