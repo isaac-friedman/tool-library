@@ -131,6 +131,7 @@ def new():
 @app.route('/tools/<int:tool_id>/edit/', methods=['GET', 'POST'])
 def edit_tool(tool_id):
     tool = Tool.query.filter_by(id=tool_id).one()
+    print(tool.location)
     if request.method == 'POST':
         if request.form['name']:  # sanity check of form data
             tool.name = request.form['name']
@@ -155,6 +156,18 @@ def delete_tool(tool_id):
         return redirect(url_for('all'))
     else:
         return render_template('delete.html', name=tool.name, id=tool.id)
+
+
+@app.route('/tools/json/')
+def json_all():
+    tools = Tool.query.all()
+    return jsonify(Tools=[tool.serialize for tool in tools])
+
+
+@app.route('/tools/<int:tool_id>/json/')
+def json_one(tool_id):
+    tool = Tool.query.filter_by(id=tool_id).one()
+    return jsonify(tool.serialize)
 
 
 if __name__ == '__main__':
