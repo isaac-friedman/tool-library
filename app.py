@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template, url_for, redirect, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from flask_oauth import OAuth
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///catalog.db'
