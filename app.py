@@ -2,6 +2,10 @@ from flask import Flask, request, render_template, url_for, redirect, flash, jso
 from flask_sqlalchemy import SQLAlchemy
 from flask_oauth import OAuth
 
+GOOGLE_CLIENT_ID = '17833133671-ejl690302ap97kmmh78en0vjfpjuuofb.apps.googleusercontent.com'
+GOOGLE_CLIENT_SECRET = 'TuQB1t7y59z9bbXbqFprZETL'
+REDIRECT_URI = 'http://127.0.0.1/oauth2callback'
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///catalog.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
