@@ -86,7 +86,7 @@ def login():
     print(state)  # Debug. Remove me
     login_session['state'] = state
     print(login_session['state'])  # Debug. Remove me
-    return render_template("login.html")
+    return render_template("login.html", STATE=state)
 
 
 @app.route('/tools/')
