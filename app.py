@@ -78,7 +78,15 @@ class Category(db.Model):
 
 @app.route('/')
 @app.route('/login/')
+# Create a state token and store it in the session for validation
 def login():
+    state = ''.join(random.choice(string.ascii_uppercase
+                + string.ascii_lowercase
+                + string.digits) for x in range(64))
+    print(state) # Debug. Remove me
+    login_session['state'] = state
+    print(login_session['state'])# Debug. Remove me
+    return "The current state of the login session is {0}".format(login_session['state'])
     return render_template("login.html")
 
 
