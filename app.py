@@ -113,7 +113,9 @@ def login():
 def gconnect():
     # If the request doesn't have `X-Requested-With` header, it could be a CSRF
     if not request.headers.get('X-Requested-With'):
-        abort(403)
+        return """Possible Cross Site Request forgery. You are being
+                  served this page as if it were a valid response but
+                  will not be allowed to proceed."""
     CLIENT_SECRET_FILE = './client_secrets.json'
 
     # Obtain authorization code
