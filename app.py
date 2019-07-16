@@ -90,16 +90,9 @@ class Category(db.Model):
         }
 
 
-def get_user_id(email):
-    try:
-        user = User.query.filter_by(email=email).one()
-        return user.email
-    except NoResultFound:
-        return None
-
-
-def create_user(login_session):
-    user = User(name=login_session['username'],
+def create_user():
+    user = User(firstname=login_session['firstname'],
+                lastname=login_session['lastname'],
                 email=login_session['email'])
     db.session.add(user)
     db.session.commit()
@@ -136,11 +129,20 @@ def gconnect():
     http_auth = credentials.authorize(httplib2.Http())
 
     # Get profile info from ID token
+    # First the tokens needed to keep track of the user
     login_session['userid'] = credentials.id_token['sub']
-    login_session['email'] = credentials.id_token['email']
     login_session['access_token'] = credentials.access_token
+    # Then the bare minimum necessary personal info for the profile
+    login_session['email'] = credentials.id_token['email']
+    login_session['firstname'] = credentials.id_token['given_name']
+    login_session['lastname'] = credentials.id_token['family_name']
+    # Check if we need to create a new user
+    exists = User.query.filter_by(email=login_session['email']).first()
+    if exists == None:
+        create_user()
+
     flash("You are now logged in as {0}. Success!"
-          .format(login_session['username']))
+          .format(login_session['firstname']))
     return render_template("list.html")
 
 
@@ -162,6 +164,10 @@ def gdisconnect():
 
 @app.route('/tools/')
 def all():
+    # TEMP test that logged in user is in the DB
+    print("The dev is cranky.")
+    loser = User.query.filter_by(email=login_session['email']).one()
+    print(loser)
     tools = db.session.query(Tool.id, Tool.name, Tool.description,
                              Category.name).join(Category,
                                                  Tool.category_id ==
