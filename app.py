@@ -117,8 +117,6 @@ def login():
 
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
-    print("!!CONECT!!")
-    #Google Version
     # If this request does not have `X-Requested-With` header, this could be a CSRF
     if not request.headers.get('X-Requested-With'):
         abort(403)
@@ -136,54 +134,28 @@ def gconnect():
 
     # Call Google API
     http_auth = credentials.authorize(httplib2.Http())
-    # drive_service = discovery.build('drive', 'v3', http=http_auth)
-    # appfolder = drive_service.files().get(fileId='appfolder').execute()
 
     # Get profile info from ID token
     login_session['userid'] = credentials.id_token['sub']
-    print("\n\n!!CREDENTIALS!!\n\n")
-    print(credentials.to_json())
     login_session['email'] = credentials.id_token['email']
     login_session['access_token'] = credentials.access_token
-    print(login_session['email'])
-    print("credentials.token value: {0}".format(credentials.id_token['sub']))
-    print("credentials.access_token value: {0}".format(credentials.access_token))
-    flash("You are now logged in as %s" % login_session['username'], 'success')
+    flash("You are now logged in as {0}. Success!" .format(login_session['username']))
     return render_template("list.html")
 
-# ONLY TEMPORARILY A ROUTE
+
 @app.route('/disconnect')
 def gdisconnect():
-    # This will clear the login session. We actually revoke the scope via JS
-    # in the view.
-    print("!!Disconnect!!")
-    access_token = login_session.get('access_token')
-    print(access_token)
 
-    if access_token is None:
-        msg = 'Current user not connected.'
-        status_code = 401
-        flash(status_code)
-        return render_template('login.html')
+    if login_session['access_token'] is None:
+        error_message = 'Current user not connected.'
+        flash(error_message)
+        return render_template('list.html')
 
     result = requests.post('https://accounts.google.com/o/oauth2/revoke',
                    params={'token': login_session['access_token']},
                    headers = {'content-type': 'application/x-www-form-urlencoded'})
-    print(result.json)
-    return login_session['email']
-"""
-    if result['status'] == '200':
-        msg = 'Successfully disconnected.'
-        status_code = 200
-        print(msg)
-        return render_template('login.html')
-    else:
-        msg = 'Failed to revoke token for given user.'
-        status_code = 400
-        flash(msg)
-        print(msg)
-        return render_template("login.html")
-"""
+
+    return render_template("login.html")
 
 
 @app.route('/tools/')
@@ -199,20 +171,14 @@ def all():
         else:
             by_category[tool[3]].append([tool[0], tool[1], tool[2]])
 
-    print(by_category)
-    # return "<center><h1>WE'RE WORKING ON IT DAMMIT</h1></center>"
     return render_template("list.html", by_category=by_category)
 
 
 @app.route('/tools/<int:category_id>/')
 def list_category(category_id):
     cat = Category.query.filter_by(id=category_id).first()
-    print(cat)
     tools = Tool.query.filter_by(category_id=category_id).all()
-    print(tools)
-    for tool in tools:
-        print(tool.id)
-        print(tool.description)
+
     return render_template("category.html", cat=cat, tools=tools)
 
 
@@ -242,7 +208,7 @@ def new():
 @app.route('/tools/<int:tool_id>/edit/', methods=['GET', 'POST'])
 def edit_tool(tool_id):
     tool = Tool.query.filter_by(id=tool_id).one()
-    print(tool.location)
+    
     if request.method == 'POST':
         if request.form['name']:  # sanity check of form data
             tool.name = request.form['name']
@@ -250,7 +216,6 @@ def edit_tool(tool_id):
             tool.notes = request.form['notes']
             tool.location = request.form['location']
 
-        print(tool.notes)
         db.session.add(tool)
         db.session.commit()
         return redirect(url_for('all'))
