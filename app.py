@@ -5,11 +5,10 @@ import httplib2
 import requests
 
 from flask import Flask, request, render_template, url_for, redirect, flash, \
-    jsonify, make_response, session as login_session
+    jsonify, session as login_session
 from flask_sqlalchemy import SQLAlchemy
 
 from oauth2client import client
-from apiclient import discovery
 
 
 CLIENT_ID = json.loads(open('client_secrets.json', 'r').
@@ -138,7 +137,7 @@ def gconnect():
     login_session['lastname'] = credentials.id_token['family_name']
     # Check if we need to create a new user
     exists = User.query.filter_by(email=login_session['email']).first()
-    if exists == None:
+    if exists is None:
         create_user()
 
     flash("You are now logged in as {0}. Success!"
