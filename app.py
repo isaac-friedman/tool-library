@@ -12,8 +12,10 @@ from oauth2client import client
 from apiclient import discovery
 
 
-CLIENT_ID = json.loads(open('client_secrets.json', 'r').read())['web']['client_id']
-CLIENT_SECRET = json.loads(open('client_secrets.json', 'r').read())['web']['client_secret']
+CLIENT_ID = json.loads(open('client_secrets.json', 'r').
+                       read())['web']['client_id']
+CLIENT_SECRET = json.loads(open('client_secrets.json', 'r').
+                           read())['web']['client_secret']
 APPLICATION_NAME = "Tool Trackr"
 
 
@@ -117,12 +119,10 @@ def login():
 
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
-    # If this request does not have `X-Requested-With` header, this could be a CSRF
+    # If the request doesn't have `X-Requested-With` header, it could be a CSRF
     if not request.headers.get('X-Requested-With'):
         abort(403)
-
     CLIENT_SECRET_FILE = './client_secrets.json'
-
 
     # Obtain authorization code
     auth_code = request.data
@@ -139,7 +139,8 @@ def gconnect():
     login_session['userid'] = credentials.id_token['sub']
     login_session['email'] = credentials.id_token['email']
     login_session['access_token'] = credentials.access_token
-    flash("You are now logged in as {0}. Success!" .format(login_session['username']))
+    flash("You are now logged in as {0}. Success!"
+          .format(login_session['username']))
     return render_template("list.html")
 
 
@@ -152,8 +153,9 @@ def gdisconnect():
         return render_template('list.html')
 
     result = requests.post('https://accounts.google.com/o/oauth2/revoke',
-                   params={'token': login_session['access_token']},
-                   headers = {'content-type': 'application/x-www-form-urlencoded'})
+                           params={'token': login_session['access_token']},
+                           headers={'content-type':
+                                    'application/x-www-form-urlencoded'})
 
     return render_template("login.html")
 
@@ -208,7 +210,7 @@ def new():
 @app.route('/tools/<int:tool_id>/edit/', methods=['GET', 'POST'])
 def edit_tool(tool_id):
     tool = Tool.query.filter_by(id=tool_id).one()
-    
+
     if request.method == 'POST':
         if request.form['name']:  # sanity check of form data
             tool.name = request.form['name']
