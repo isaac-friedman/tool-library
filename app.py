@@ -6,8 +6,8 @@ import requests
 
 from flask import Flask, request, render_template, url_for, redirect, flash, \
     jsonify, session as login_session
-from flask_sqlalchemy import SQLAlchemy
-
+# from flask_sqlalchemy import SQLAlchemy
+from db_setup import db, Category, Tool, User
 from oauth2client import client
 
 
@@ -22,71 +22,7 @@ app = Flask(__name__)
 # DB Config
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///catalog.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
-
-
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    firstname = db.Column(db.String(20), nullable=False)
-    lastname = db.Column(db.String(30), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-
-    @property
-    def serialize(self):
-        return {
-            'id': self.id,
-            'firstname': self.firstname,
-            'lastname': self.lastname,
-            'email': self.email,
-        }
-
-
-class Tool(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(20), nullable=False)
-    description = db.Column(db.String(300))
-    '''
-    Possible values:
-        1- home
-        2- work
-        3- on loan
-        4- unknown
-    '''
-    location = db.Column(db.Integer, default=4)
-    notes = db.Column(db.String(300))
-    # All tools must belong to a user.
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    user = db.relationship('User', backref=db.backref('tools'))
-    # All tools must belong to a category.
-    category_id = db.Column(db.Integer, db.ForeignKey('category.id'),
-                            nullable=False)
-    category = db.relationship('Category', backref=db.backref('tools'))
-
-    @property
-    def serialize(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'description': self.description,
-            'location': self.location,
-            'notes': self.notes,
-            'user_id': self.user_id,
-            'category_id': self.category_id,
-        }
-
-
-class Category(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(20), nullable=False)
-    description = db.Column(db.String(300))
-
-    @property
-    def serialize(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'description': self.description,
-        }
+db.init_app(app)
 
 
 def create_user():
@@ -165,21 +101,16 @@ def gdisconnect():
 
 @app.route('/tools/')
 def all():
-    # TEMP test that logged in user is in the DB
-    print("The dev is cranky.")
-    loser = User.query.filter_by(email=login_session['email']).one()
-    print(loser)
-    tools = db.session.query(Tool.id, Tool.name, Tool.description,
-                             Category.name).join(Category,
-                                                 Tool.category_id ==
-                                                 Category.id).all()
+    tools = (db.session.query(Tool.id, Tool.name, Tool.description,
+                             Tool.location, Tool.notes, Category.name)
+                .join(Category, Tool.category_id == Category.id).all())
     by_category = {}
     for tool in tools:
-        if tool[3] not in by_category:
-            by_category[tool[3]] = [[tool[0], tool[1], tool[2]]]
+        if tool[5] not in by_category:
+            by_category[tool[5]] = [[tool[0], tool[1], tool[2], tool[3], tool[4]]]
         else:
-            by_category[tool[3]].append([tool[0], tool[1], tool[2]])
-
+            by_category[tool[5]].append([tool[0], tool[1], tool[2], tool[3], tool[4]])
+    print(by_category)
     return render_template("list.html", by_category=by_category)
 
 
