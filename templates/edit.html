@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title></title>
-    </head>
-    <body>
-        <center><h1>Future Edit form for existing tools</h1></center>
+{% extends "base.html" %}
+{% block content %}
+            <center><h1>Future Edit form for existing tools</h1></center>
         <label for="edit_tool">Fields marked * are required.</label>
         <form id="edit_tool" method='POST' action="{{url_for('edit_tool', tool_id=tool.id)}}">
             <!--TEMPORARY!! DELETE NEXT LINE AFTER LOGIN SYSTEM IS IMPLEMENTED-->
@@ -36,5 +31,4 @@
             <input type="submit" value="submit" />
         </form>
         <a href = {{url_for('all')}}>Cancel</a>
-    </body>
-</html>
+{% endblock %}
