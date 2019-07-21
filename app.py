@@ -74,8 +74,9 @@ def gconnect():
     login_session['firstname'] = credentials.id_token['given_name']
     login_session['lastname'] = credentials.id_token['family_name']
     # Check if we need to create a new user
-    exists = User.query.filter_by(email=login_session['email']).first()
-    if exists is None:
+    try:
+        exists = User.query.filter_by(email=login_session['email']).first()
+    except:
         create_user()
 
     flash("You are now logged in as {0}. Success!"
