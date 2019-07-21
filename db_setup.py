@@ -33,7 +33,6 @@ class Tool(db.Model):
     notes = db.Column(db.String(300))
     # All tools must belong to a user.
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    user_email = db.Column(db.String, db.ForeignKey('user.email'))
     user = db.relationship('User', backref=db.backref('tools'))
     # All tools must belong to a category.
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'),
