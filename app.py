@@ -10,20 +10,16 @@ from flask import Flask, request, render_template, url_for, redirect, flash, \
 from db_setup import db, Category, Tool, User
 from oauth2client import client
 
-
+app = Flask(__name__)
 CLIENT_ID = json.loads(open('client_secrets.json', 'r').
                        read())['web']['client_id']
 CLIENT_SECRET = json.loads(open('client_secrets.json', 'r').
                            read())['web']['client_secret']
 APPLICATION_NAME = "Tool Trackr"
-
-
-app = Flask(__name__)
 # DB Config
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///catalog.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
-
 
 def create_user():
     user = User(firstname=login_session['firstname'],
@@ -67,7 +63,7 @@ def gconnect():
 
     # Get profile info from ID token
     # First the tokens needed to keep track of the user
-    login_session['userid'] = credentials.id_token['sub']
+    login_session['google_id'] = credentials.id_token['sub']
     login_session['access_token'] = credentials.access_token
     # Then the bare minimum necessary personal info for the profile
     login_session['email'] = credentials.id_token['email']
@@ -78,6 +74,8 @@ def gconnect():
         exists = User.query.filter_by(email=login_session['email']).first()
     except:
         create_user()
+    login_session['user_id']=db.session.query(User.id).filter_by(email=login_session['email']).scalar()
+    print(login_session)
 
     flash("You are now logged in as {0}. Success!"
           .format(login_session['firstname']))
@@ -104,7 +102,8 @@ def gdisconnect():
 def all():
     tools = (db.session.query(Tool.id, Tool.name, Tool.description,
                              Tool.location, Tool.notes, Category.name)
-                .join(Category, Tool.category_id == Category.id).all())
+                .join(Category, Tool.category_id == Category.id)
+                .filter(Tool.user_id == login_session['user_id']).all())
     by_category = {}
     for tool in tools:
         if tool[5] not in by_category:
