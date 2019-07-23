@@ -21,6 +21,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///catalog.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 
+
 def create_user():
     user = User(firstname=login_session['firstname'],
                 lastname=login_session['lastname'],
@@ -72,9 +73,11 @@ def gconnect():
     # Check if we need to create a new user
     try:
         exists = User.query.filter_by(email=login_session['email']).first()
-    except:
+    except Exception:
         create_user()
-    login_session['user_id']=db.session.query(User.id).filter_by(email=login_session['email']).scalar()
+    login_session['user_id'] = db.session.query(User.id).\
+        filter_by(email=login_session['email']).\
+        scalar()
     print(login_session)
 
     flash("You are now logged in as {0}. Success!"
@@ -100,19 +103,21 @@ def gdisconnect():
 @app.route('/tools/')
 def all():
     # Users must log in to see this view.
-    if login_session['access_token'] == None:
+    if login_session['access_token'] is None:
         return redirect(url_for("login"))
 
     tools = (db.session.query(Tool.id, Tool.name, Tool.description,
-                             Tool.location, Tool.notes, Category.name)
-                .join(Category, Tool.category_id == Category.id)
-                .filter(Tool.user_id == login_session['user_id']).all())
+                              Tool.location, Tool.notes, Category.name)
+             .join(Category, Tool.category_id == Category.id)
+             .filter(Tool.user_id == login_session['user_id']).all())
     by_category = {}
     for tool in tools:
         if tool[5] not in by_category:
-            by_category[tool[5]] = [[tool[0], tool[1], tool[2], tool[3], tool[4]]]
+            by_category[tool[5]] = [[tool[0], tool[1], tool[2],
+                                     tool[3], tool[4]]]
         else:
-            by_category[tool[5]].append([tool[0], tool[1], tool[2], tool[3], tool[4]])
+            by_category[tool[5]].append([tool[0], tool[1], tool[2],
+                                         tool[3], tool[4]])
     print(by_category)
     return render_template("list.html", by_category=by_category)
 
@@ -120,7 +125,7 @@ def all():
 @app.route('/tools/<int:category_id>/')
 def list_category(category_id):
     # Users must log in to see this view.
-    if login_session['access_token'] == None:
+    if login_session['access_token'] is None:
         return redirect(url_for("login"))
 
     cat = Category.query.filter_by(id=category_id).first()
@@ -132,7 +137,7 @@ def list_category(category_id):
 @app.route('/tools/categories/')
 def list_cats():
     # Users must log in to see this view.
-    if login_session['access_token'] == None:
+    if login_session['access_token'] is None:
         return redirect(url_for("login"))
 
     cats = Category.query.all()
@@ -142,7 +147,7 @@ def list_cats():
 @app.route('/tools/new/', methods=['GET', 'POST'])
 def new():
     # Users must log in to see this view.
-    if login_session['access_token'] == None:
+    if login_session['access_token'] is None:
         return redirect(url_for("login"))
 
     print(login_session['user_id'])
@@ -164,7 +169,7 @@ def new():
 @app.route('/tools/<int:tool_id>/edit/', methods=['GET', 'POST'])
 def edit_tool(tool_id):
     # Users must log in to see this view.
-    if login_session['access_token'] == None:
+    if login_session['access_token'] is None:
         return redirect(url_for("login"))
 
     tool = Tool.query.filter_by(id=tool_id).one()
@@ -179,17 +184,20 @@ def edit_tool(tool_id):
                 db.session.add(tool)
                 db.session.commit()
             else:
-                flash("You do not have permission to edit this tool and you could not have accessed it non-maliciously. You will now be logged out.")
+                flash("""You do not have permission to edit this tool and you
+                         could not have accessed it non-maliciously. You will
+                         now be logged out.""")
                 gdisconnect()
         return redirect(url_for('all'))
     else:
-        return render_template("edit.html", tool=tool, user_id=login_session['user_id'])
+        return render_template("edit.html", tool=tool,
+                               user_id=login_session['user_id'])
 
 
 @app.route('/tools/<int:tool_id>/delete/', methods=['GET', 'POST'])
 def delete_tool(tool_id):
     # Users must log in to see this view.
-    if login_session['access_token'] == None:
+    if login_session['access_token'] is None:
         return redirect(url_for("login"))
 
     tool = Tool.query.filter_by(id=tool_id).one()
@@ -199,7 +207,10 @@ def delete_tool(tool_id):
             db.session.commit()
             return redirect(url_for('all'))
         else:
-            flash("You do not have permission to delete this tool and you could not have accessed it non-maliciously. You will now be logged out.")
+            flash("""You do not have permission to edit this tool and you
+                     could not have accessed it non-maliciously. You will
+                     now be logged out.""")
+
             gdisconnect()
     else:
         return render_template('delete.html', name=tool.name, id=tool.id)
