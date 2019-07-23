@@ -104,7 +104,7 @@ def gdisconnect():
 def all():
     location_lookup = ['undefined', 'Home', 'Work', 'On loan', 'Unknown']
     # Users must log in to see this view.
-    if login_session['access_token'] is None or login_session is None:
+    if login_session is None or login_session['access_token'] is None:
         return redirect(url_for("login"))
 
     tools = (db.session.query(Tool.id, Tool.name, Tool.description,
@@ -126,7 +126,7 @@ def all():
 @app.route('/tools/categories/<int:category_id>/')
 def list_category(category_id):
     # Users must log in to see this view.
-    if login_session['access_token'] is None or login_session is None:
+    if login_session is None or login_session['access_token'] is None:
         return redirect(url_for("login"))
 
     cat = Category.query.filter_by(id=category_id).first()
@@ -138,7 +138,7 @@ def list_category(category_id):
 @app.route('/tools/categories/')
 def list_cats():
     # Users must log in to see this view.
-    if login_session['access_token'] is None or login_session is None:
+    if login_session is None or login_session['access_token'] is None:
         return redirect(url_for("login"))
 
     cats = Category.query.all()
@@ -148,7 +148,7 @@ def list_cats():
 @app.route('/tools/new/', methods=['GET', 'POST'])
 def new():
     # Users must log in to see this view.
-    if login_session['access_token'] is None or login_session is None:
+    if login_session is None or login_session['access_token'] is None:
         return redirect(url_for("login"))
 
     print(login_session['user_id'])
@@ -170,7 +170,7 @@ def new():
 @app.route('/tools/<int:tool_id>/edit/', methods=['GET', 'POST'])
 def edit_tool(tool_id):
     # Users must log in to see this view.
-    if login_session['access_token'] is None or login_session is None:
+    if login_session is None or login_session['access_token'] is None:
         return redirect(url_for("login"))
 
     tool = Tool.query.filter_by(id=tool_id).one()
@@ -198,7 +198,7 @@ def edit_tool(tool_id):
 @app.route('/tools/<int:tool_id>/delete/', methods=['GET', 'POST'])
 def delete_tool(tool_id):
     # Users must log in to see this view.
-    if login_session['access_token'] is None or login_session is None:
+    if login_session is None or login_session['access_token'] is None:
         return redirect(url_for("login"))
 
     tool = Tool.query.filter_by(id=tool_id).one()
@@ -219,7 +219,7 @@ def delete_tool(tool_id):
 
 @app.route('/tools/json/')
 def json_all():
-    if login_session['access_token'] is None or login_session is None:
+    if login_session is None or login_session['access_token'] is None:
         return jsonify('{msg : You are not logged in}')
     tools = Tool.query.all()
     return jsonify(Tools=[tool.serialize for tool in tools])
@@ -227,7 +227,7 @@ def json_all():
 
 @app.route('/tools/<int:tool_id>/json/')
 def json_one(tool_id):
-    if login_session['access_token'] is None or login_session is None:
+    if login_session is None or login_session['access_token'] is None:
         return jsonify('{msg : You are not logged in}')
     tool = Tool.query.filter_by(id=tool_id).one()
     return jsonify(tool.serialize)
