@@ -102,6 +102,7 @@ def gdisconnect():
 
 @app.route('/tools/')
 def all():
+    location_lookup = ['undefined', 'Home', 'Work', 'On loan', 'Unknown']
     # Users must log in to see this view.
     if login_session['access_token'] is None:
         return redirect(url_for("login"))
@@ -114,10 +115,10 @@ def all():
     for tool in tools:
         if tool[5] not in by_category:
             by_category[tool[5]] = [[tool[0], tool[1], tool[2],
-                                     tool[3], tool[4]]]
+                                     location_lookup[tool[3]], tool[4]]]
         else:
             by_category[tool[5]].append([tool[0], tool[1], tool[2],
-                                         tool[3], tool[4]])
+                                         location_lookup[tool[3]], tool[4]])
     print(by_category)
     return render_template("list.html", by_category=by_category)
 
