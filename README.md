@@ -31,3 +31,6 @@ Tool Trackr offers two JSON endpoints that allows logged-in users to view
 **but not edit** any tool in the system.
 * /tools/json/ returns all information on all tools
 * /tools/<tool id>/json/ returns all information on the given tool id
+
+## Authors
+* Isaac Friedman
