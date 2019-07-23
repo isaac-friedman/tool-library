@@ -79,7 +79,7 @@ def gconnect():
         filter_by(email=login_session['email']).\
         scalar()
     print(login_session)
-    
+
     flash("You are now logged in as {0}. Success!"
           .format(login_session['firstname']))
     return render_template("list.html")
@@ -122,7 +122,7 @@ def all():
     return render_template("list.html", by_category=by_category)
 
 
-@app.route('/tools/<int:category_id>/')
+@app.route('/tools/categories/<int:category_id>/')
 def list_category(category_id):
     # Users must log in to see this view.
     if login_session['access_token'] is None:
