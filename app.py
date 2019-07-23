@@ -159,7 +159,7 @@ def edit_tool(tool_id):
                 db.session.add(tool)
                 db.session.commit()
             else:
-                flash("You do not have permission to edit that tool and you could not have accessed it non-maliciously. You will now be logged out.")
+                flash("You do not have permission to edit this tool and you could not have accessed it non-maliciously. You will now be logged out.")
                 gdisconnect()
         return redirect(url_for('all'))
     else:
@@ -170,9 +170,13 @@ def edit_tool(tool_id):
 def delete_tool(tool_id):
     tool = Tool.query.filter_by(id=tool_id).one()
     if request.method == 'POST':
-        db.session.delete(tool)
-        db.session.commit()
-        return redirect(url_for('all'))
+        if login_session['user_id'] == tool.user_id:
+            db.session.delete(tool)
+            db.session.commit()
+            return redirect(url_for('all'))
+        else:
+            flash("You do not have permission to delete this tool and you could not have accessed it non-maliciously. You will now be logged out.")
+            gdisconnect()
     else:
         return render_template('delete.html', name=tool.name, id=tool.id)
 
