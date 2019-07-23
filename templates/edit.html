@@ -3,8 +3,7 @@
             <center><h1>Future Edit form for existing tools</h1></center>
         <label for="edit_tool">Fields marked * are required.</label>
         <form id="edit_tool" method='POST' action="{{url_for('edit_tool', tool_id=tool.id)}}">
-            <!--TEMPORARY!! DELETE NEXT LINE AFTER LOGIN SYSTEM IS IMPLEMENTED-->
-            <input type=hidden name="user_id" value=1 />
+            <input type=hidden name="user_id" value={{user_id}} />
             <label for="name">Name: *</label>
             <input required type="text" id="name" name="name" value="{{tool.name}}"/><br/>
             <label for="description">Description: </label>

@@ -84,7 +84,6 @@ def gconnect():
 
 @app.route('/disconnect')
 def gdisconnect():
-
     if login_session['access_token'] is None:
         error_message = 'Current user not connected.'
         flash(error_message)
@@ -151,18 +150,20 @@ def edit_tool(tool_id):
     tool = Tool.query.filter_by(id=tool_id).one()
     if request.method == 'POST':
         if request.form['name']:  # sanity check of form data
-            print(login_session['user_id'])
-            tool.name = request.form['name']
-            tool.description = request.form['description']
-            tool.notes = request.form['notes']
-            tool.location = request.form['location']
-            tool.user_id = login_session['user_id']
-
-        db.session.add(tool)
-        db.session.commit()
+            # Check that user has permission to edit this tool.
+            if login_session['user_id'] == tool.user_id:
+                tool.name = request.form['name']
+                tool.description = request.form['description']
+                tool.notes = request.form['notes']
+                tool.location = request.form['location']
+                db.session.add(tool)
+                db.session.commit()
+            else:
+                flash("You do not have permission to edit that tool and you could not have accessed it non-maliciously. You will now be logged out.")
+                gdisconnect()
         return redirect(url_for('all'))
     else:
-        return render_template("edit.html", tool=tool)
+        return render_template("edit.html", tool=tool, user_id=login_session['user_id'])
 
 
 @app.route('/tools/<int:tool_id>/delete/', methods=['GET', 'POST'])
