@@ -79,7 +79,7 @@ def gconnect():
         filter_by(email=login_session['email']).\
         scalar()
     print(login_session)
-
+    
     flash("You are now logged in as {0}. Success!"
           .format(login_session['firstname']))
     return render_template("list.html")
