@@ -7,8 +7,6 @@
     <body>
         <label for="new_tool">Fields marked * are required.</label>
         <form id="new_tool" method='POST' action='{{url_for('new')}}'>
-            <!--TEMPORARY!! DELETE NEXT LINE AFTER LOGIN SYSTEM IS IMPLEMENTED-->
-            <input type=hidden name="user_id" value=1 />
             <label for="name">Name: *</label>
             <input required type="text" id="name" name="name"/><br/>
             <label for="description">Description: </label>

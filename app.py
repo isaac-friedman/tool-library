@@ -130,9 +130,10 @@ def list_cats():
 
 @app.route('/tools/new/', methods=['GET', 'POST'])
 def new():
+    print(login_session['user_id'])
     if request.method == 'POST':
         # Use of user_id from input is strictly temporary
-        newTool = Tool(user_id=int(request.form['user_id']),
+        newTool = Tool(user_id=int(login_session['user_id']),
                        name=request.form['name'],
                        description=request.form['description'],
                        location=int(request.form['location']),
@@ -142,19 +143,20 @@ def new():
         db.session.commit()
         return redirect(url_for('all'))
     else:
-        return render_template("new.html")
+        return render_template("new.html", user_id=login_session['user_id'])
 
 
 @app.route('/tools/<int:tool_id>/edit/', methods=['GET', 'POST'])
 def edit_tool(tool_id):
     tool = Tool.query.filter_by(id=tool_id).one()
-
     if request.method == 'POST':
         if request.form['name']:  # sanity check of form data
+            print(login_session['user_id'])
             tool.name = request.form['name']
             tool.description = request.form['description']
             tool.notes = request.form['notes']
             tool.location = request.form['location']
+            tool.user_id = login_session['user_id']
 
         db.session.add(tool)
         db.session.commit()
