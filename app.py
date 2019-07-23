@@ -3,7 +3,7 @@ import string
 import json
 import httplib2
 import requests
-
+from os.path import isfile
 from flask import Flask, request, render_template, url_for, redirect, flash, \
     jsonify, session as login_session
 # from flask_sqlalchemy import SQLAlchemy
@@ -130,7 +130,7 @@ def list_category(category_id):
         return redirect(url_for("login"))
 
     cat = Category.query.filter_by(id=category_id).first()
-    tools = Tool.query.filter_by(category_id=category_id).all()
+    tools = Tool.query.filter_by(category_id=category_id, user_id=login_session['user']).all()
 
     return render_template("category.html", cat=cat, tools=tools)
 
@@ -188,7 +188,7 @@ def edit_tool(tool_id):
                 flash("""You do not have permission to edit this tool and you
                          could not have accessed it non-maliciously. You will
                          now be logged out.""")
-                gdisconnect()
+                return redirect(url_for("login"))
         return redirect(url_for('all'))
     else:
         return render_template("edit.html", tool=tool,
@@ -211,8 +211,8 @@ def delete_tool(tool_id):
             flash("""You do not have permission to edit this tool and you
                      could not have accessed it non-maliciously. You will
                      now be logged out.""")
+            return redirect(url_for("login"))
 
-            gdisconnect()
     else:
         return render_template('delete.html', name=tool.name, id=tool.id)
 
@@ -234,4 +234,30 @@ if __name__ == '__main__':
       will go here. Well, not *here* here because we'll use OAuth'''
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.debug = True
+    # Recreate database with catagories if it doesn't exists
+    if not isfile('./catalog.db'):
+        with app.app_context():
+            # Create tables
+            db.create_all()
+            # Add the default categories
+            cats = [
+                Category(name='Hand Tools',
+                         description="Miscellaneous non-powered, one-person tools"),
+                Category(name='Carpentry',
+                         description="Tools for building structures out of wood"),
+                Category(name='Woodworking',
+                         description="""Tools for making fine furniture, art pieces
+                         etc out of wood"""),
+                Category(name='Painting',
+                         description="""Tools for covering surfaces with noxious
+                         liquids."""),
+                Category(name='Welding',
+                         description="Hot metal glue gun and accessories."),
+                Category(name='Plumbing',
+                         description="""Tools for working with pipes that aren't
+                         made out of lead anymore, we promise.""")
+            ]
+            for cat in cats:
+                db.session.add(cat)
+            db.session.commit()
     app.run(host='0.0.0.0', port=8000)
