@@ -34,3 +34,6 @@ Tool Trackr offers two JSON endpoints that allows logged-in users to view
 
 ## Authors
 * Isaac Friedman
+
+## Acknowledgments
+* Google Auth functions come straight from Google's documentation, slightly modified.
