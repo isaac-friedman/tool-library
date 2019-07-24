@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-            <center><h1>Future Edit form for existing tools</h1></center>
         <label for="edit_tool">Fields marked * are required.</label>
         <form id="edit_tool" method='POST' action="{{url_for('edit_tool', tool_id=tool.id)}}">
             <input type=hidden name="user_id" value={{user_id}} />

@@ -2,7 +2,9 @@
 {% block content %}
 
         <form method='POST' action="{{url_for('delete_tool',tool_id=id)}}"
+        <p>
             <label for="delete_tool">Really delete {{name}}? This action cannot be undone</label>
+        </p>
             <input type="submit" value="DELETE!"/>
         </form>
         <a href="{{url_for('all')}}">Cancel</a>
