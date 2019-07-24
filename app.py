@@ -78,8 +78,6 @@ def gconnect():
     login_session['user_id'] = db.session.query(User.id).\
         filter_by(email=login_session['email']).\
         scalar()
-    print(login_session)
-
     flash("You are now logged in as {0}. Success!"
           .format(login_session['firstname']))
     return render_template("list.html")
@@ -119,7 +117,6 @@ def all():
         else:
             by_category[tool[5]].append([tool[0], tool[1], tool[2],
                                          location_lookup[tool[3]], tool[4]])
-    print(by_category)
     return render_template("list.html", by_category=by_category)
 
 
@@ -151,7 +148,6 @@ def new():
     if login_session is None or login_session['access_token'] is None:
         return redirect(url_for("login"))
 
-    print(login_session['user_id'])
     if request.method == 'POST':
         # Use of user_id from input is strictly temporary
         newTool = Tool(user_id=int(login_session['user_id']),
