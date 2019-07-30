@@ -6,12 +6,6 @@ tool and where it is located.
 
 ## Getting Started
 
-### Prerequisites  
-* Python 2.7
-* Flask 1.1
-* FlaskSQLAlchemy 2.x
-* SQLAlchemy 0.8+
-
 
 ### Installing
 1. Check that you have all prerequisites installed
